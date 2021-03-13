@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>My super Webpage</title>
+    <style>
+        table {
+            font-family: arial, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            border: 5px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th{
+            background-color: red;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #00dd00;
+        }
+        tr:nth-child(even) {
+            background-color: #dddd00;
+        }
+        .delete{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h2>Person table</h2>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Action</th>
+    </tr>
+    <tr th:each="person :  ${persons}">
+        <td th:text="${person.id}"></td>
+        <td th:text="${person.first_name}"></td>
+        <td th:text="${person.last_name}"></td>
+        <td><a th:href="@{'/viewOne/'+${person.id}}">Edit</a> <a th:href="@{'/delete/'+${person.id}}" class="delete" title="Delete this person">Delete</a></td>
+    </tr>
+</table>
+
+<h1>Add a Person</h1>
+<form method="post" action="/create">
+    <table>
+        <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <td><input type="text" name="first_name"></td>
+            <td><input type="text" name="last_name"></td>
+            <td><input type="submit" value="Create"></td>
+        </tr>
+    </table>
+</form>
+
+<p id="demo"></p>
+<script>
+    var myVar = setInterval(myTimer ,500);
+    function myTimer() {
+        var d = new Date();
+        document.getElementById("demo").innerHTML = "Time: "+d.toLocaleTimeString();
+    }
+
+    $( document ).ready(function() {
+        $("[name='first_name']").focus();
+
+        console.log( "document loaded" );
+        $( "th" ).click(function() {
+            $( "td" ).toggle("slow");
+        });
+
+        $('form').on('submit', function(e){
+            if($('input[name$="first_name"]').val().length>0 && $('input[name$="last_name"]').val().length>0)
+            {
+                if(!confirm("Are you sure you will create this person?" ))
+                {
+                    e.preventDefault();
+                }
+            }
+            else
+            {
+                alert("Firstname or lastname are missing!");
+                e.preventDefault();
+            }
+        });
+
+        $('a').click(function(e) {
+            if(confirm("Are you sure you will do that?" ))
+            {}
+            else
+            {
+                e.preventDefault();
+            }
+        });
+    });
+</script>
+</body>
+</html>
